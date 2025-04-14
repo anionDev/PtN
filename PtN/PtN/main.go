@@ -2,95 +2,70 @@ package main
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"os"
+	"strings"
 )
 
-// Alert is the expected structure of an Alertmanager webhook payload.
-type Alert struct {
-	Status string `json:"status"`
-	Alerts []struct {
-		Labels      map[string]string `json:"labels"`
-		Annotations map[string]string `json:"annotations"`
-	} `json:"alerts"`
-}
-
-// handler receives the webhook from Alertmanager and forwards each alert to ntfy
-func handler(w http.ResponseWriter, r *http.Request) {
-	var alert Alert
-
-	// Read the incoming request body
-	body, err := io.ReadAll(r.Body)
-	if err != nil {
-		log.Println("Error reading request body:", err)
-		http.Error(w, "Bad request", http.StatusBadRequest)
-		return
-	}
-	defer r.Body.Close()
-
-	// Parse JSON body into Alert struct
-	if err := json.Unmarshal(body, &alert); err != nil {
-		log.Println("Error parsing JSON:", err)
-		http.Error(w, "Bad request", http.StatusBadRequest)
-		return
-	}
-
-	// Get the ntfy URL from environment
-	ntfyURL := os.Getenv("NTFY_URL")
-	if ntfyURL == "" {
-		log.Println("NTFY_URL not set")
-		http.Error(w, "Server misconfigured", http.StatusInternalServerError)
-		return
-	}
-
-	// Iterate over all alerts and send them to ntfy
-	for _, a := range alert.Alerts {
-		message := fmt.Sprintf("🔔 [%s] %s\n%s",
-			a.Labels["severity"],
-			a.Labels["alertname"],
-			a.Annotations["summary"])
-
-		// Create POST request to ntfy
-		req, err := http.NewRequest("POST", ntfyURL, bytes.NewBuffer([]byte(message)))
-		if err != nil {
-			log.Println("Error creating ntfy request:", err)
-			continue
+func main() {
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		// Extract topic from URL path (e.g., /alert → alert)
+		topic := strings.TrimPrefix(r.URL.Path, "/")
+		if topic == "" {
+			http.Error(w, "Missing topic in path", http.StatusBadRequest)
+			return
 		}
 
+		// Read request body
+		body, err := io.ReadAll(r.Body)
+		if err != nil {
+			http.Error(w, "Failed to read request body", http.StatusInternalServerError)
+			return
+		}
+		defer r.Body.Close()
+
+		// Get environment variables
+		ntfyServer := os.Getenv("NTFY_SERVER")
+		ntfyUser := os.Getenv("NTFY_USER")
+		ntfyPass := os.Getenv("NTFY_PASS")
+
+		if ntfyServer == "" {
+			http.Error(w, "Missing NTFY_SERVER env-var", http.StatusInternalServerError)
+			return
+		}
+
+		// Send to ntfy
+		url := fmt.Sprintf("%s/%s", ntfyServer, topic)
+		req, err := http.NewRequest("POST", url, bytes.NewReader(body))
+		if err != nil {
+			http.Error(w, "Failed to create request", http.StatusInternalServerError)
+			return
+		}
+
+		if ntfyUser!="" || ntfyPass!="" {
+			req.SetBasicAuth(ntfyUser, ntfyPass)
+		}
 		req.Header.Set("Content-Type", "text/plain")
 
-		// If credentials are provided, set Basic Auth header
-		if user := os.Getenv("NTFY_USER"); user != "" {
-			pass := os.Getenv("NTFY_PASS")
-			req.SetBasicAuth(user, pass)
-		}
-
-		// Send the message
 		resp, err := http.DefaultClient.Do(req)
 		if err != nil {
-			log.Println("Error sending to ntfy:", err)
-			continue
+			http.Error(w, "Failed to send request to ntfy", http.StatusBadGateway)
+			log.Printf("Error sending to ntfy: %v", err)
+			return
 		}
-		resp.Body.Close()
-		log.Printf("Message sent: %s (%d)", message, resp.StatusCode)
-	}
+		defer resp.Body.Close()
 
-	w.WriteHeader(http.StatusOK)
-}
-
-// main starts the HTTP server to receive webhooks from Alertmanager
-func main() {
-	http.HandleFunc("/alert", handler)
+		log.Printf("Forwarded alert to topic %s – ntfy responded with %s", topic, resp.Status)
+		w.WriteHeader(http.StatusOK)
+	})
 
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
-
-	log.Printf("Proxy running on port %s", port)
+	log.Println("Listening on :8080...")
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }

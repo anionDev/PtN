@@ -1,15 +1,14 @@
-FROM golang:1.22-alpine as builder
+FROM golang:1.24
 
-WORKDIR /app
-COPY . .
-RUN go build -o proxy .
+WORKDIR /usr/src/app
 
-FROM alpine:latest
-WORKDIR /app
+# pre-copy/cache go.mod for pre-downloading dependencies and only redownloading them in subsequent builds if they change
+#COPY go.mod go.sum ./
+#RUN go mod download
 
-COPY --from=builder /app/proxy .
+COPY PtN .
+RUN go build -v -o /usr/local/bin/app ./...
 
 ENV PORT=8080
 EXPOSE 8080
-
-CMD ["./proxy"]
+CMD ["app"]
