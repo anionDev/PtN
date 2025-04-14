@@ -15,6 +15,7 @@ def run_testcases():
     sc.run_program_argsasarray("go", ["install", "github.com/t-yuki/gocover-cobertura@latest"], src_folder)
     sc.run_program_argsasarray("go", ["test", "-coverprofile=coverage.out", "./..."], src_folder)
     sc.run_program_argsasarray("sh", ["-c", f"gocover-cobertura < coverage.out > {test_coverage_folder}/coverage.xml"], src_folder)
+    # TODO do common follow-up-tasks for testcoverage-file (verification, generate html-documentation, etc.)
 
 
 if __name__ == "__main__":
