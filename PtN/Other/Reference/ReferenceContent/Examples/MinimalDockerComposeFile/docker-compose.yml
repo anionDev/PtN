@@ -2,10 +2,10 @@ services:
     ptn:
       container_name: ptn
       environment:
-        - NTFY_URL=https://your-ntfy-server-ip-address.example.com/my-alert
+        - NTFY_SERVER=https://your-ntfy-server-ip-address.example.com
         - NTFY_USER=ntfy_username
         - NTFY_PASS=ntfy_password
         - PORT=8080
       ports:
         - 8080:8080
-      image: ptn:1.0.0
+      image: ptn:1.0.1

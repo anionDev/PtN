@@ -1,14 +1,17 @@
-FROM golang:1.24
+FROM golang:1.24 AS builder
 
-WORKDIR /usr/src/app
+WORKDIR /app
+COPY ./PtN .
+RUN go build -v -o output ./...
 
-# pre-copy/cache go.mod for pre-downloading dependencies and only redownloading them in subsequent builds if they change
-#COPY go.mod go.sum ./
-#RUN go mod download
+FROM alpine:latest
 
-COPY PtN .
-RUN go build -v -o /usr/local/bin/app ./...
+RUN apk --no-cache add ca-certificates
+
+WORKDIR /root/
+COPY --from=builder /app/output .
 
 ENV PORT=8080
 EXPOSE 8080
-CMD ["app"]
+
+CMD ["./app"]
