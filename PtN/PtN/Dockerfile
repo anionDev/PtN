@@ -1,14 +1,14 @@
-FROM golang:1.24
+# Build stage
+FROM golang:1.24.2-alpine AS builder
 
-WORKDIR /usr/src/app
-
-# pre-copy/cache go.mod for pre-downloading dependencies and only redownloading them in subsequent builds if they change
-#COPY go.mod go.sum ./
-#RUN go mod download
-
+WORKDIR /app
 COPY PtN .
-RUN go build -v -o /usr/local/bin/app ./...
+RUN go build -o server main.go
 
-ENV PORT=8080
+# Minimal final image with shell
+FROM alpine:latest
+RUN apk --no-cache add ca-certificates bash
+WORKDIR /root/
+COPY --from=builder /app/server .
 EXPOSE 8080
-CMD ["app"]
+ENTRYPOINT ["./server"]

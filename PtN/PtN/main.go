@@ -1,7 +1,9 @@
+// main.go
 package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io"
 	"log"
@@ -10,62 +12,87 @@ import (
 	"strings"
 )
 
-func main() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		// Extract topic from URL path (e.g., /alert → alert)
-		topic := strings.TrimPrefix(r.URL.Path, "/")
-		if topic == "" {
-			http.Error(w, "Missing topic in path", http.StatusBadRequest)
-			return
+type Alert struct {
+	Annotations struct {
+		Summary     string `json:"summary"`
+		Description string `json:"description"`
+	} `json:"annotations"`
+}
+
+type AlertManagerPayload struct {
+	Alerts []Alert `json:"alerts"`
+}
+
+func handler(w http.ResponseWriter, r *http.Request) {
+	topic := strings.TrimPrefix(r.URL.Path, "/")
+	if topic == "" {
+		http.Error(w, "missing topic in path", http.StatusBadRequest)
+		return
+	}
+
+	ntfyURL := os.Getenv("NTFY_URL")
+	if ntfyURL == "" {
+		http.Error(w, "NTFY_URL environment variable not set", http.StatusInternalServerError)
+		return
+	}
+
+	user := os.Getenv("NTFY_USER")
+	password := os.Getenv("NTFY_PASSWORD")
+
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "unable to read request body", http.StatusBadRequest)
+		return
+	}
+
+	var payload AlertManagerPayload
+	if err := json.Unmarshal(body, &payload); err != nil {
+		http.Error(w, "invalid JSON payload", http.StatusBadRequest)
+		return
+	}
+
+	for _, alert := range payload.Alerts {
+		title := alert.Annotations.Summary
+		message := alert.Annotations.Description
+		
+		if title == "" {
+			title = "No title"
+		}
+		if message == "" {
+			message = "No description"
 		}
 
-		// Read request body
-		body, err := io.ReadAll(r.Body)
+		req, err := http.NewRequest("POST", fmt.Sprintf("%s/%s", ntfyURL, topic), bytes.NewBufferString(message))
 		if err != nil {
-			http.Error(w, "Failed to read request body", http.StatusInternalServerError)
-			return
-		}
-		defer r.Body.Close()
-
-		// Get environment variables
-		ntfyServer := os.Getenv("NTFY_SERVER")
-		ntfyUser := os.Getenv("NTFY_USER")
-		ntfyPass := os.Getenv("NTFY_PASS")
-
-		if ntfyServer == "" {
-			http.Error(w, "Missing NTFY_SERVER env-var", http.StatusInternalServerError)
+			log.Printf("error creating request: %v", err)
+			http.Error(w, "failed to create request", http.StatusInternalServerError)
 			return
 		}
 
-		// Send to ntfy
-		url := fmt.Sprintf("%s/%s", ntfyServer, topic)
-		req, err := http.NewRequest("POST", url, bytes.NewReader(body))
-		if err != nil {
-			http.Error(w, "Failed to create request", http.StatusInternalServerError)
-			return
+		req.Header.Set("Title", title)
+		if user != "" && password != "" {
+			req.SetBasicAuth(user, password)
 		}
-
-		if ntfyUser!="" || ntfyPass!="" {
-			req.SetBasicAuth(ntfyUser, ntfyPass)
-		}
-		req.Header.Set("Content-Type", "text/plain")
 
 		resp, err := http.DefaultClient.Do(req)
-		if err != nil {
-			http.Error(w, "Failed to send request to ntfy", http.StatusBadGateway)
-			log.Printf("Error sending to ntfy: %v", err)
+		if err != nil || resp.StatusCode < 200 || resp.StatusCode >= 300 {
+			log.Printf("ntfy request failed: %v, status: %v", err, resp.Status)
+			http.Error(w, "ntfy forwarding failed", http.StatusBadGateway)
 			return
 		}
-		defer resp.Body.Close()
+	}
 
-		log.Printf("Forwarded alert to topic %s – ntfy responded with %s", topic, resp.Status)
-		w.WriteHeader(http.StatusOK)
-	})
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("alerts forwarded to ntfy"))
+}
 
+func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
-	log.Println("Listening on :8080...")
+
+	http.HandleFunc("/", handler)
+	log.Printf("Listening on :%s", port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }

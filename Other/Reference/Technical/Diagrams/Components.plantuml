@@ -1,0 +1,10 @@
+@startuml
+
+[Prometheus alertmanager] as alertmanager
+[PtN] as ptn
+[ntfy-server] as ntfy
+
+alertmanager --> "http-post" ptn
+ptn --> "http-post" ntfy
+
+@enduml
