@@ -1,0 +1,11 @@
+@startuml CodeUnits-Overview
+title CodeUnits of PtN
+
+[PtN]
+note as PtNNote
+  PtN is a proxy to receive events from an prometheus-alertmanager-server and forwards them to a ntfy-server.
+end note
+PtN .. PtNNote
+
+
+@enduml

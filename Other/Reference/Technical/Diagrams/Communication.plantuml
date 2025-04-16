@@ -1,0 +1,7 @@
+@startuml
+AlertManager -> PtN: Sends alert with json-body
+PtN --> ntfyServer: Forwards alert with plain-text-body
+
+PtN <-- ntfyServer: Responses with 200 (or some error)
+AlertManager <-- PtN: Forwards response from ntfyServer
+@enduml

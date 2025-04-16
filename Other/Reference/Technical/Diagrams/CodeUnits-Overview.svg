@@ -1,0 +1,19 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" contentStyleType="text/css" data-diagram-type="DESCRIPTION" height="186px" preserveAspectRatio="none" style="width:663px;height:186px;background:#FFFFFF;" version="1.1" viewBox="0 0 663 186" width="663px" zoomAndPan="magnify">
+  <ns0:title>CodeUnits of PtN</ns0:title>
+  <ns0:defs />
+  <ns0:g>
+    <ns0:text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="115.1035" x="267.1047" y="24.5332">CodeUnits of PtN</ns0:text>
+    <ns0:g class="entity" data-entity="PtN" data-source-line="3" data-uid="ent0002" id="entity_PtN">
+      <ns0:rect fill="#F1F1F1" height="47.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="63.3379" x="299.5" y="45.6094" />
+      <ns0:rect fill="#F1F1F1" height="10" style="stroke:#181818;stroke-width:0.5;" width="15" x="342.8379" y="50.6094" />
+      <ns0:rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="340.8379" y="52.6094" />
+      <ns0:rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="340.8379" y="56.6094" />
+      <ns0:text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="23.3379" x="314.5" y="80.1426">PtN</ns0:text>
+    </ns0:g>
+    <ns0:g class="entity" data-entity="PtNNote" data-source-line="5" data-uid="ent0003" id="entity_PtNNote">
+      <ns0:path d="M6,153.6094 L6,179.9609 A0,0 0 0 0 6,179.9609 L656.313,179.9609 A0,0 0 0 0 656.313,179.9609 L656.313,163.6094 L646.313,153.6094 L335,153.6094 L331,94.0894 L327,153.6094 L6,153.6094 A0,0 0 0 0 6,153.6094" fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;" />
+      <ns0:path d="M646.313,153.6094 L646.313,163.6094 L656.313,163.6094 L646.313,153.6094" fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;" />
+      <ns0:text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="629.313" x="12" y="172.1045">PtN is a proxy to receive events from an prometheus-alertmanager-server and forwards them to a ntfy-server.</ns0:text>
+    </ns0:g>
+  </ns0:g>
+</ns0:svg>

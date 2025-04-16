@@ -2,7 +2,7 @@ services:
     ptn:
       container_name: ptn
       environment:
-        - NTFY_SERVER=https://your-ntfy-server-ip-address.example.com
+        - NTFY_URL=https://your-ntfy-server-ip-address.example.com
         - NTFY_USER=ntfy_username
         - NTFY_PASS=ntfy_password
         - PORT=8080
