@@ -1,9 +1,16 @@
 # PtN
 
-PtN ("Prometheus to ntfy") is a proxy to receive events from an prometheus-alertmanager-server and forwards them to a ntfy-server.
+PtN ("Prometheus to ntfy") is a proxy to receive events from a [prometheus-alertmanager](https://prometheus.io/docs/alerting/latest/alertmanager/)-server and forwards them to a [ntfy](https://github.com/binwiederhier/ntfy)-server.
 
 For usage-hints of the proxy and its configuration see [the ReadMe.md of the codeunit](https://github.com/anionDev/PtN/blob/main/PtN/ReadMe.md).
 For a general reference of the PtN-project see [here](https://github.com/anionDev/PtN/blob/main/Other/Reference/Reference.md).
+
+## Why?
+
+Why do we need another tool for that usecase?
+I wanted to forward alerts from the prometheus-alertmanager to a ntfy-server but unfortunately they have different formats/standards/protocols to send/receive data.
+And there are already tools which are adding exactly this compatibility-proxy (for example [this](https://github.com/alexbakker/alertmanager-ntfy) and [that](https://github.com/pinpox/alertmanager-ntfy)) but I could not find a container-image for these tools, at least at this moment where I needed it.
+So I decided to relase a small proxy-server which is doing exactly the required data-conversion between alertmanager and ntfy by myself.
 
 ## Quick-start
 
