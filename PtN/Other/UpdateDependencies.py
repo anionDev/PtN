@@ -4,7 +4,7 @@ from ScriptCollection.TasksForCommonProjectStructure import TasksForCommonProjec
 
 
 def update_dependencies():
-    pass  # TODO
+    pass  # TODO update go version in go.mod and in dockerfile
 
 
 if __name__ == "__main__":
