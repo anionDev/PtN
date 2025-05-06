@@ -31,6 +31,10 @@ receivers:
 
 PtN will automagically recognize `my-alert-topic` as topic and considers this when calling the actual ntfy-server.
 
+## Additional information
+
+PtN uses Go v1.24.2.
+
 ## Disclaimer
 
 I am developer, but I am not a Go-developer.
