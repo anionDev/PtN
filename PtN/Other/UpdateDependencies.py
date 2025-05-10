@@ -13,7 +13,7 @@ def get_latest_version(version_strings: list[str]) -> str:
 
 
 def get_latest_go_version_in_docker_alpine_image() -> str:
-    response = requests.get("https://hub.docker.com/v2/repositories/library/golang/tags?name=alpine&ordering=last_updated&page=1&page_size=999999", timeout=20, headers={'Cache-Control': 'no-cache'})
+    response = requests.get("https://hub.docker.com/v2/repositories/library/golang/tags?name=alpine&ordering=last_updated&page=1&page_size=250", timeout=20, headers={'Cache-Control': 'no-cache'})
     if response.status_code != 200:
         raise ValueError(f"Failed to fetch data from Docker Hub: {response.status_code}")
     response_text = response.text
@@ -33,7 +33,7 @@ def update_dependencies():
     go_mod_file: str = GeneralUtilities.resolve_relative_path("PtN/go.mod", codeunit_folder)
     GeneralUtilities.replace_regex_in_file(go_mod_file, "go \\d+\\.\\d+\\.\\d+", f"go {latest_go_version}")
     readme_file: str = GeneralUtilities.resolve_relative_path("ReadMe.md", codeunit_folder)
-    GeneralUtilities.replace_regex_in_file(readme_file, "PtN uses Go v\\d+\\.\\d+\\.\\d+\\.", f"PtN uses Go v{latest_go_version}.")
+    GeneralUtilities.replace_regex_in_file(readme_file, "The latest version of PtN uses Go v\\d+\\.\\d+\\.\\d+\\.", f"The latest version of PtN uses Go v{latest_go_version}.")
 
 
 if __name__ == "__main__":
