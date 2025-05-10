@@ -1,4 +1,3 @@
-// main.go
 package main
 
 import (
@@ -54,7 +53,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	for _, alert := range payload.Alerts {
 		title := alert.Annotations.Summary
 		message := alert.Annotations.Description
-		
+
 		if title == "" {
 			title = "No title"
 		}
@@ -64,8 +63,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 		req, err := http.NewRequest("POST", fmt.Sprintf("%s/%s", ntfyURL, topic), bytes.NewBufferString(message))
 		if err != nil {
-			log.Printf("error creating request: %v", err)
-			http.Error(w, "failed to create request", http.StatusInternalServerError)
+			log.Printf("Error creating request: %v", err)
+			http.Error(w, "Failed to create request", http.StatusInternalServerError)
 			return
 		}
 
@@ -75,9 +74,9 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		resp, err := http.DefaultClient.Do(req)
-		if err != nil || resp.StatusCode < 200 || resp.StatusCode >= 300 {
-			log.Printf("ntfy request failed: %v, status: %v", err, resp.Status)
-			http.Error(w, "ntfy forwarding failed", http.StatusBadGateway)
+		if err != nil || resp.StatusCode < 200 || 299 < resp.StatusCode {
+			log.Printf("Request to ntfy failed: %v, status: %v", err, resp.Status)
+			http.Error(w, "Forwarding to ntfy failed", http.StatusBadGateway)
 			return
 		}
 	}

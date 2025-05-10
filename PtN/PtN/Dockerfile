@@ -1,14 +1,12 @@
-# Build stage
 FROM golang:1.24.2-alpine AS builder
 
 WORKDIR /app
 COPY PtN .
-RUN go build -o server main.go
+RUN go build -o program main.go
 
-# Minimal final image with shell
-FROM alpine:latest
+FROM alpine:3.21.3
 RUN apk --no-cache add ca-certificates bash
 WORKDIR /root/
-COPY --from=builder /app/server .
+COPY --from=builder /app/program .
 EXPOSE 8080
-ENTRYPOINT ["./server"]
+ENTRYPOINT ["./program"]
