@@ -33,7 +33,7 @@ PtN will automagically recognize `my-alert-topic` as topic and considers this wh
 
 ## Additional information
 
-The latest version of PtN uses Go v1.24.2.
+The latest version of PtN uses Go v1.24.4.
 
 ## Disclaimer
 

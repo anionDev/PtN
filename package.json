@@ -1,0 +1,7 @@
+{
+  "name": "PtN",
+  "scripts": {
+    "prepare": "husky"
+  },
+  "version": "1.0.3"
+}
