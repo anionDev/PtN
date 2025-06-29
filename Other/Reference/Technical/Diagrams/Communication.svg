@@ -4,17 +4,17 @@
     <ns0:g>
       <ns0:title>AlertManager</ns0:title>
       <ns0:rect fill="#000000" fill-opacity="0.00000" height="141.4063" width="8" x="50.0205" y="37.6094" />
-      <ns0:line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5.0,5.0;" x1="54" x2="54" y1="37.6094" y2="179.0156" />
+      <ns0:line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="54" x2="54" y1="37.6094" y2="179.0156" />
     </ns0:g>
     <ns0:g>
       <ns0:title>PtN</ns0:title>
       <ns0:rect fill="#000000" fill-opacity="0.00000" height="141.4063" width="8" x="277.7549" y="37.6094" />
-      <ns0:line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5.0,5.0;" x1="281.0859" x2="281.0859" y1="37.6094" y2="179.0156" />
+      <ns0:line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="281.0859" x2="281.0859" y1="37.6094" y2="179.0156" />
     </ns0:g>
     <ns0:g>
       <ns0:title>ntfyServer</ns0:title>
       <ns0:rect fill="#000000" fill-opacity="0.00000" height="141.4063" width="8" x="509.1138" y="37.6094" />
-      <ns0:line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5.0,5.0;" x1="512.2139" x2="512.2139" y1="37.6094" y2="179.0156" />
+      <ns0:line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="512.2139" x2="512.2139" y1="37.6094" y2="179.0156" />
     </ns0:g>
     <ns0:g class="participant participant-head" data-participant="AlertManager">
       <ns0:rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="98.041" x="5" y="5" />
@@ -47,17 +47,17 @@
     </ns0:g>
     <ns0:g class="message" data-participant-1="PtN" data-participant-2="ntfyServer">
       <ns0:polygon fill="#181818" points="501.1138,96.3125,511.1138,100.3125,501.1138,104.3125,505.1138,100.3125" style="stroke:#181818;stroke-width:1;" />
-      <ns0:line style="stroke:#181818;stroke-width:1;stroke-dasharray:2.0,2.0;" x1="281.7549" x2="507.1138" y1="100.3125" y2="100.3125" />
+      <ns0:line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="281.7549" x2="507.1138" y1="100.3125" y2="100.3125" />
       <ns0:text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="198.688" x="288.7549" y="95.4561">Forwards alert with plain-text-body</ns0:text>
     </ns0:g>
     <ns0:g class="message" data-participant-1="ntfyServer" data-participant-2="PtN">
       <ns0:polygon fill="#181818" points="292.7549,126.6641,282.7549,130.6641,292.7549,134.6641,288.7549,130.6641" style="stroke:#181818;stroke-width:1;" />
-      <ns0:line style="stroke:#181818;stroke-width:1;stroke-dasharray:2.0,2.0;" x1="286.7549" x2="512.1138" y1="130.6641" y2="130.6641" />
+      <ns0:line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="286.7549" x2="512.1138" y1="130.6641" y2="130.6641" />
       <ns0:text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="207.3589" x="298.7549" y="125.8076">Responses with 200 (or some error)</ns0:text>
     </ns0:g>
     <ns0:g class="message" data-participant-1="PtN" data-participant-2="AlertManager">
       <ns0:polygon fill="#181818" points="65.0205,157.0156,55.0205,161.0156,65.0205,165.0156,61.0205,161.0156" style="stroke:#181818;stroke-width:1;" />
-      <ns0:line style="stroke:#181818;stroke-width:1;stroke-dasharray:2.0,2.0;" x1="59.0205" x2="280.7549" y1="161.0156" y2="161.0156" />
+      <ns0:line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="59.0205" x2="280.7549" y1="161.0156" y2="161.0156" />
       <ns0:text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="203.7344" x="71.0205" y="156.1592">Forwards response from ntfyServer</ns0:text>
     </ns0:g>
   </ns0:g>
