@@ -8,4 +8,4 @@ services:
         - PORT=8080
       ports:
         - 8080:8080
-      image: ptn:1.0.7
+      image: ptn:1.1.1
