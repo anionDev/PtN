@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 )
 
 type Alert struct {
@@ -71,6 +72,22 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		req.Header.Set("Title", title)
 		if user != "" && password != "" {
 			req.SetBasicAuth(user, password)
+		}
+		
+		audit_log_filename := "AuditLog.log"
+		timestamp := time.Now().Format("2006-01-02T15:04:05-07:00")
+		if _, err := os.Stat(audit_log_filename); err == nil {
+			f, err := os.OpenFile(audit_log_filename, os.O_APPEND|os.O_WRONLY, 0644)
+			if err != nil {
+				panic(err)
+			}
+			defer f.Close()
+			
+			audit_line := timestamp+": "+title+" ("+message+")\n"
+			log.Print(audit_line)
+			if _, err := f.WriteString(audit_line); err != nil {
+				panic(err)
+			}
 		}
 
 		resp, err := http.DefaultClient.Do(req)
