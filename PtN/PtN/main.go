@@ -23,6 +23,37 @@ type AlertManagerPayload struct {
 	Alerts []Alert `json:"alerts"`
 }
 
+func writeAuditLog(line string) {
+	dir := "/Workspace/Log"
+	file := dir + "/AuditLog.log"
+	err := os.MkdirAll(dir, 0755)
+	if err != nil {
+		log.Printf("Error while creating folder: %v", err)
+		return
+	}
+
+	if _, err := os.Stat(file); os.IsNotExist(err) {
+		f, err := os.Create(file)
+		if err != nil {
+			log.Printf("Error while creating file: %v", err)
+			return
+		}
+		f.Close()
+	}
+
+	f, err := os.OpenFile(file, os.O_APPEND|os.O_WRONLY, 0644)
+	if err != nil {
+		log.Printf("Error while opening file: %v", err)
+		return
+	}
+	defer f.Close()
+
+	if _, err := f.WriteString(line); err != nil {
+		log.Printf("Error while writing to audit-log: %v", err)
+		return
+	}
+}
+
 func handler(w http.ResponseWriter, r *http.Request) {
 	topic := strings.TrimPrefix(r.URL.Path, "/")
 	if topic == "" {
@@ -74,21 +105,10 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			req.SetBasicAuth(user, password)
 		}
 		
-		audit_log_filename := "AuditLog.log"
 		timestamp := time.Now().Format("2006-01-02T15:04:05-07:00")
-		if _, err := os.Stat(audit_log_filename); err == nil {
-			f, err := os.OpenFile(audit_log_filename, os.O_APPEND|os.O_WRONLY, 0644)
-			if err != nil {
-				panic(err)
-			}
-			defer f.Close()
-			
-			audit_line := timestamp+": "+title+" ("+message+")\n"
-			log.Print(audit_line)
-			if _, err := f.WriteString(audit_line); err != nil {
-				panic(err)
-			}
-		}
+		audit_line := timestamp+": "+title+" ("+message+")\n"
+		log.Print(audit_line)
+		writeAuditLog(audit_line)
 
 		resp, err := http.DefaultClient.Do(req)
 		if err != nil || resp.StatusCode < 200 || 299 < resp.StatusCode {
