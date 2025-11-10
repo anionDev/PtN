@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<coverage version="1.0" date="2025-11-10_19-48-23" tag="v1.1.0">
+  <assembly name="PtN">
+    <class name="main.go" coveredlines="22" coverablelines="72" totallines="114" coveredbranches="0" totalbranches="0" coveredcodeelements="1" fullcoveredcodeelements="0" totalcodeelements="2" />
+  </assembly>
+</coverage>
