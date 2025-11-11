@@ -107,7 +107,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		
 		timestamp := time.Now().Format("2006-01-02T15:04:05-07:00")
 		audit_line := timestamp+": "+title+" ("+message+")\n"
-		log.Print(audit_line)
+		fmt.Println(audit_line)
 		writeAuditLog(audit_line)
 
 		resp, err := http.DefaultClient.Do(req)
